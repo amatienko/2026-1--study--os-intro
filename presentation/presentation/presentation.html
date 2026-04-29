@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Converted from Markdown</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      line-height: 1.6; 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 20px;
+      color: #333;
+    }
+    h1, h2, h3 { color: #333; margin-top: 1.5em; margin-bottom: 0.5em; }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.5em; }
+    h3 { font-size: 1.2em; }
+    code { 
+      background: #f4f4f4; 
+      padding: 2px 4px; 
+      border-radius: 3px; 
+      font-family: 'Courier New', monospace;
+    }
+    pre { 
+      background: #f4f4f4; 
+      padding: 15px; 
+      border-radius: 5px; 
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      line-height: 1.4;
+    }
+    blockquote { 
+      border-left: 4px solid #ddd; 
+      margin: 1em 0; 
+      padding-left: 20px; 
+      color: #666;
+      font-style: italic;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1em 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    ul, ol {
+      margin: 1em 0;
+      padding-left: 2em;
+    }
+    li {
+      margin: 0.5em 0;
+    }
+  </style>
+</head>
+<body>
+<hr>
+<h2>marp: true
+theme: default
+paginate: true</h2>
+<h1>Система инициализации SystemV.</h1>
+<p><strong>Автор:</strong> Матиенко Арсений Юрьевич
+<strong>Преподаватель:</strong> Кулябов Дмитрий Сергеевич - 	Профессор, Доктор к. ф.-м. н. Доцент кафедры систем телекоммуникаций
+<strong>Организация:</strong> Российский университет дружбы народов имени Патриса Лумумбы</p>
+<hr>
+<h2>Содержание</h2>
+<ol>
+<li>Информация о докладчике</li>
+<li>Вводная часть</li>
+<li>Цель, гипотеза, задачи исследования</li>
+<li>Материалы и методы, инструменты, теоретическая база</li>
+<li>Содержание исследования: Основные концепции и Механизм работы</li>
+<li>Исторический переход от BSD init к SystemV и ключивые отличия</li>
+<li>Поля записи inittab</li>
+<li>Анализ архитектуры SystemV преимущества, недостатки и практическая значимость</li>
+</ol>
+<hr>
+<h2>Информация о докладчике</h2>
+<p><strong>Группа:</strong> НБИбд-02-25
+<strong>Специальность:</strong> Бизнес-информатика
+<strong>Курс:</strong> Архитектура компьютеров и операционные системы. 
+<strong>Раздел:</strong> &quot;Операционные системы&quot;</p>
+<hr>
+<h2>Вводная часть</h2>
+<ul>
+<li><strong>Актуальность темы:</strong> В UNIX-системах процесс загрузки — это строгая последовательность, где ключевую роль играет процесс init. SystemV init десятилетиями был доминирующим стандартом, и его понимание критично для работы с серверными ОС.</li>
+<li><strong>Объект исследования:</strong> Процесс загрузки и управления службами в UNIX-подобных операционных системах.</li>
+<li><strong>Предмет исследования:</strong> Архитектура, механизмы и конфигурация системы инициализации SystemV.</li>
+<li><strong>Научная новизна:</strong> Систематизация принципов работы унаследованной архитектуры SystemV в контексте её сравнения с современными асинхронными.</li>
+<li><strong>Практическая значимость:</strong> Глубокое понимание механизмов маршрутизации.</li>
+</ul>
+<hr>
+<h2>Цель, гипотеза, задачи исследования</h2>
+<ul>
+<li><strong>Цель:</strong> Проанализировать архитектурные особенности SystemV init, выявить её ограничения и обосновать причины перехода индустрии к новым стандартам.</li>
+<li><strong>Гипотеза:</strong> Несмотря на то, что строгая последовательная логика SystemV уступила место современным событийным моделям, заложенная в ней концепция &quot;уровней выполнения&quot; стала фундаментальной базой для всего системного администрирования Linux/UNIX.</li>
+<li><strong>Задачи исследования:</strong><ul>
+<li>Изучить исторический переход от BSD init к SystemV.</li>
+<li>Проанализировать структуру конфигурации (/etc/inittab) и RC-скриптов.</li>
+<li>Исследовать инструментарий администратора.</li>
+<li>Оценить преимущества и недостатки архитектуры.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Материалы и методы, инструменты, теоретическая база</h2>
+<ul>
+<li><strong>Теоретическая база исследования:</strong> 
+Фундаментальные труды по архитектуре операционных систем (Робачевский А.М., Иртегов Д.В., Столяров А.В., Колисниченко Д.Н., Яремчук С.А.).</li>
+<li><strong>Методы исследования:</strong><ul>
+<li>Структурно-функциональный анализ.</li>
+<li>Ретроспективный анализ (изучение эволюции от BSD к SystemV).</li>
+<li>Сравнительный анализ (оценка плюсов и минусов архитектуры).</li>
+</ul>
+</li>
+<li><strong>Инструменты исследования:</strong>
+Высокоуровневые утилиты системного администратора: service, update-rc.d (Ubuntu).</li>
+</ul>
+<hr>
+<h2>Содержание исследования: Основные концепции</h2>
+<p><strong>Предлагаемое решение задач:</strong> Разбор модульной системы инициализации AT&amp;T.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Уровень</th>
+<th align="left">Название</th>
+<th align="left">Характеристика</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>0</strong></td>
+<td align="left">Half</td>
+<td align="left">Остановка системы и отключение питания.</td>
+</tr>
+<tr>
+<td align="center"><strong>1</strong></td>
+<td align="left">Single-user</td>
+<td align="left">Однопользовательский режим (root) без сети. Диагностика.</td>
+</tr>
+<tr>
+<td align="center"><strong>2</strong></td>
+<td align="left">Multi-user (с сетью)</td>
+<td align="left">Стандартный серверный режим без GUI.</td>
+</tr>
+<tr>
+<td align="center"><strong>3</strong></td>
+<td align="left">X11 / GUI</td>
+<td align="left">Режим рабочей станции с графическим интерфейсом.</td>
+</tr>
+<tr>
+<td align="center"><strong>4</strong></td>
+<td align="left">Reboot</td>
+<td align="left">Перезагрузка системы.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Содержание исследования: Механизм работы</h2>
+<p><strong>Чтение конфигурации (/etc/inittab):</strong>
+   Процесс init определяет уровень по умолчанию. 
+   Синтаксис: id : runlevels : action : process
+<img src="init.png" alt="компьютер"></p>
+<hr>
+<h2>Исторический переход от BSD init к SystemV</h2>
+<table>
+<thead>
+<tr>
+<th align="center">Система</th>
+<th align="left">Период</th>
+<th align="left">Ключевые особенности</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>BSD init</strong></td>
+<td align="left">1970</td>
+<td align="left">Простая линейная инициализация, 2 runlevel (single/multi-user)</td>
+</tr>
+<tr>
+<td align="center"><strong>SystemV init</strong></td>
+<td align="left">1983</td>
+<td align="left">Иерархическая структура, 0-9 runlevels, скриптовая модель</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Ключевые отличия SystemV от BSD init</h2>
+<ul>
+<li><strong>Преимущества SystemV</strong><ul>
+<li>Гибкая система уровней запуска</li>
+<li>Независимые стартовые скрипты в /etc/init.d/</li>
+<li>Конфигурация через централизованный /etc/inittab</li>
+</ul>
+</li>
+<li><strong>Ограничения BSD</strong><ul>
+<li>Только два режима: single-user и multi-user</li>
+<li>Жёстко заданная последовательность инициализации</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Поля записи inittab</h2>
+<table>
+<thead>
+<tr>
+<th align="center">Поле</th>
+<th align="left">Описание</th>
+<th align="left">Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>id</strong></td>
+<td align="left">Уникальный идентификатор (1-4 символа)</td>
+<td align="left">id, l3, c1</td>
+</tr>
+<tr>
+<td align="center"><strong>runlevels</strong></td>
+<td align="left">Уровни, для которых действует запись</td>
+<td align="left">2345, 0, 123456</td>
+</tr>
+<tr>
+<td align="center"><strong>action</strong></td>
+<td align="left">Действие init над процессом</td>
+<td align="left">initdefault, respawn, wait</td>
+</tr>
+<tr>
+<td align="center"><strong>process</strong></td>
+<td align="left">Команда/скрипт для выполнения</td>
+<td align="left">/sbin/getty 38400 tty1</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Анализ архитектуры SystemV преимущества</h2>
+<ul>
+<li>Простота и прозрачность<ul>
+<li>Все конфигурации — текстовые файлы</li>
+<li>Логика выполнения очевидна из структуры каталогов</li>
+</ul>
+</li>
+<li>Минимальные зависимости<ul>
+<li>init — статически линкованный бинарник</li>
+<li>Не требует сложных библиотек для работы</li>
+</ul>
+</li>
+<li>Гибкость конфигурации<ul>
+<li>Произвольные runlevels (0-9 + буквы)</li>
+<li>Возможность кастомизации под любую задачу</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Анализ архитектуры SystemV недостатки</h2>
+<ul>
+<li>Последовательная загрузка<ul>
+<li>Скрипты выполняются строго по порядку</li>
+<li>Медленнее загрузка</li>
+</ul>
+</li>
+<li>Примитивное управление зависимостями <ul>
+<li>Зависимости определяются порядком в имени (S01, S02)</li>
+<li>Нет автоматического разрешения циклов</li>
+</ul>
+</li>
+<li>Отсутствие мониторинга сервисов<ul>
+<li>init не отслеживает состояние запущенных демонов</li>
+<li>Требуются внешние решения (monit, daemontools)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Практическая значимость</h2>
+<p>Ограничения SystemV привели к созданию <strong>Upstart</strong> и <strong>systemd</strong>, отказ от bash в пользу unit-файлов и контроль через cgroups.</p>
+<hr>
+<h2>Общее заключение и выводы</h2>
+<ul>
+<li><strong>Исторический фундамент:</strong> Архитектура SystemV init сыграла ключевую роль в эволюции ОС семейства UNIX.</li>
+<li><strong>Стандартизация:</strong> Концепция уровней выполнения (Runlevels) и иерархия управления процессами заложили основы классического системного администрирования.</li>
+<li><strong>Закат:</strong> Развитие многоядерных процессоров и облачных инфраструктур сделало строго последовательный запуск узким местом ОС.</li>
+<li><strong>Вывод:</strong> Несмотря на вытеснение стандартом systemd, глубокое понимание принципов работы SystemV остается обязательным атрибутом профессионального системного инженера и администратора.</li>
+</ul>
+
+</body>
+</html>
